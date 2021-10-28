@@ -1,26 +1,16 @@
 package phonebookProject;
 
 public class Person {
+	// Class specific variables
 	private String firstName;
 	private String lastName;
 	private long phoneNo;
 	private Address personAddress;
-	
+	// Basic Constructor
 	public Person () {
 		
 	}
-	
-	public void addAddress(String street, String city, String state, int zip) {
-		Address tempAddress = new Address(street,city,state,zip);
-		personAddress = tempAddress;
-	}
-	
-	public Address getAddress() {
-		return this.personAddress;
-	}
-	
-	
-	
+	// Person Constructor
 	public Person(String firstName, String lastName, long phoneNo, Address personAddress) {
 		super();
 		this.firstName = firstName;
@@ -28,7 +18,16 @@ public class Person {
 		this.phoneNo = phoneNo;
 		this.personAddress = personAddress;
 	}
-
+	// Address setter
+	public void addAddress(String street, String city, String state, int zip) {
+		Address tempAddress = new Address(street,city,state,zip);
+		personAddress = tempAddress;
+	}
+	// Address getter
+	public Address getAddress() {
+		return this.personAddress;
+	}
+	// Getters and setters
 	public String getFirstName() {
 		return firstName;
 	}
@@ -52,7 +51,7 @@ public class Person {
 	public void setPhoneNo(long phoneNo) {
 		this.phoneNo = phoneNo;
 	}
-
+	// toString override
 	@Override
 	public String toString() {
 		// Build a phonebook record default entry using Stringbuilder.toString()
@@ -70,9 +69,7 @@ public class Person {
 		// Return the entry as a String
 		return entry.toString();
 	}
-	
-	
-
+	// Outdated Address getters and setters
 //	public Address getPersonAddress() {
 //		return personAddress;
 //	}

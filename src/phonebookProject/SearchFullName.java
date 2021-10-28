@@ -1,50 +1,31 @@
 package phonebookProject;
+// Import other classes for search
+import phonebookProject.SearchFirstName;
+import phonebookProject.SearchLastName;
 
 public class SearchFullName extends Search{
-    String searchFName = "";
-    String searchLName = "";
-
+	// Class specific variables
+    private String searchFName = "";
+    private String searchLName = "";
+    
+    // SearchFullName constructor
+    public SearchFullName(Person[] phonebook, String firstName, String lastName) {
+    	searchFName = firstName;
+    	searchLName = lastName;
+    }
     @Override
     public Person[] searchEntry(Person[] phonebook) {
         searchFullName(phonebook,searchFName,searchLName);
         return reference;
     }
-    
+    // Class specific method
     private Person[] searchFullName(Person[] phonebook, String searchFName, String searchLName) {
+    	Person[] temp = phonebook;
+		SearchLastName lastResult = new SearchLastName(phonebook,searchLName);
+		temp = lastResult.searchEntry(phonebook);
+    	SearchFirstName firstResult = new SearchFirstName(temp,searchFName);
+    	reference = firstResult.searchEntry(temp);
+    	
     	return reference;
     }
-    private Person[] searchLastName(Person[] phonebook, String searchFName) {
-		// make a for loop to measure out the size of the phonebook array
-		int count = 0;
-		for (int i = 0; i < phonebook.length; i++) {
-			if(phonebook[i].getLastName() == searchLName) {
-				count++;
-			}
-		}
-		Person[] temp = new Person[count];
-		reference = temp;
-		for (int i = 0; i < phonebook.length; i++) {  // searches through the person object
-			if(phonebook[i].getLastName() == searchLName) {
-		 		reference[i] = phonebook[i]; // sets reference to the index
-		 	}
-		 }
-		return reference; // phonebook[reference];
-	}
-    private Person[] searchFirstName(Person[] phonebook, String searchFName) {
-		// make a for loop to measure out the size of the phonebook array
-		int count = 0;
-		for (int i = 0; i < phonebook.length; i++) {
-			if(phonebook[i].getFirstName() == searchFName) {
-				count++;
-			}
-		}
-		Person[] temp = new Person[count];
-		reference = temp;
-		for (int i = 0; i < phonebook.length; i++) {  // searches through the person object
-			if(phonebook[i].getFirstName() == searchFName) {
-		 		reference[i] = phonebook[i]; // sets reference to the index
-		 	}
-		 }
-		return reference; // phonebook[reference];
-	}
 }

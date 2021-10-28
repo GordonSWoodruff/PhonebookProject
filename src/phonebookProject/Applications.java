@@ -27,6 +27,9 @@ public class Applications {
 	private static void mainMenu(Person[] phonebook) {
 		// Declare and define variables
 		boolean validInput = false;
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
 		Scanner userInput = new Scanner(System.in);
 		// Display the main menu
 		System.out.println("+-+-+-+-+-+-+PHONE BOOK+-+-+-+-+-+-+");
@@ -75,9 +78,12 @@ public class Applications {
 	// menuChoice method executes the choice from mainMenu
 	private static void menuChoice(int choice, Person[] phonebook) {
 		// Declare and define variables
-		Scanner userInput = new Scanner(System.in);
-		String redo = "";
 		boolean redoSection = true;
+		String redo = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
 		// switch statement to execute the different methods of the phonebook
 		switch(choice) {
 		// Case 1 = DISPLAY all records
@@ -96,7 +102,7 @@ public class Applications {
 		// Case 2 = ADD an entry to the phonebook, then display 
 		case 2:
 			while(redoSection) {
-				addEntry(phonebook);
+				phonebook = addEntry(phonebook);
 				System.out.println("Do you want to ADD another record? (Y/N) ");
 				redo = userInput.nextLine();
 				redoSection = toBoolean(redo);
@@ -118,6 +124,7 @@ public class Applications {
 			break;
 		case 4:
 			while(redoSection) {
+				System.out.println("Main Menu Phonebook size = " + phonebook.length);
 				phonebook = checkUpdate(phonebook);
 				System.out.println("Do you want to UPDATE another record? (Y/N) ");
 				redo = userInput.nextLine();
@@ -129,6 +136,7 @@ public class Applications {
 			break;
 		case 5:
 			while(redoSection) {
+				System.out.println("Main Menu Phonebook size = " + phonebook.length);
 				search(phonebook);
 				System.out.println("Do you want to SEARCH FOR another record? (Y/N) ");
 				redo = userInput.nextLine();
@@ -174,27 +182,29 @@ public class Applications {
 	
 	
 	// addEntry method
-//	private static Person[] addEntry(Person[] phonebook) {
-//		int choice = 0;
-//		Scanner userInput = new Scanner(System.in);
-//		System.out.println("Do you want to enter record information \n 1) MANUALLY or by \n 2) PASTING?");
-//		choice = userInput.nextInt();
-//		switch (choice) {
-//		case 1:
-//			System.out.println("Test! 7");
-//			addEntryManual(phonebook);
-//			break;
-//		case 2:
-//			addEntryPaste(phonebook);
-//			break;
-//		}
-//		userInput.close();
-//		return phonebook;
-//	}
+	private static Person[] addEntry(Person[] phonebook) {
+		// Declare and define variables
+		int choice = 0;
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
+		System.out.println("Do you want to enter record information \n 1) MANUALLY or by \n 2) PASTING?");
+		choice = userInput.nextInt();
+		switch (choice) {
+		case 1:
+			phonebook = addEntryManual(phonebook);
+			break;
+		case 2:
+			phonebook = addEntryPaste(phonebook);
+			break;
+		}
+		return phonebook;
+	}
 
 	// addEntryManual methods
-	private static Person[] addEntry(Person[] phonebook) {
-//	private static Person[] addEntryManual(Person[] phonebook) {
+//	private static Person[] addEntry(Person[] phonebook) {
+	private static Person[] addEntryManual(Person[] phonebook) {
 		// Declare and define needed variables
 		boolean validInput = false;
 		int addZip = 0;
@@ -272,6 +282,62 @@ public class Applications {
 		Person ap1 = new Person(addFirstName,addLastName,addPhoneNo,a1);
 		// insert newly created Person into phonebook
 		phonebook = insertObject(phonebook,ap1);
+		displayAllRecords(phonebook);
+		return phonebook;
+	}
+	private static Person[] addEntryPaste(Person[] phonebook) {
+		// Declare and define variables
+		String pastedPerson = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
+		// Paste entry input
+		System.out.println("Please paste the user information (ensure each section"
+				+ " is separated by a comma followed by a space): ");
+		System.out.println("Example: John Jones, 1681 Broadway, New York City, NY, 10019, 2121234567");
+		pastedPerson = userInput.nextLine();
+		// Declare split variables
+		String firstName = "";
+		String lastName = "";
+		String[] pastedSplit = pastedPerson.split(", ");
+		String[] nameSplit = pastedSplit[0].split(" ");
+		// Split the name into first and last name
+		if(nameSplit.length > 2) {
+			for(int i = 0; i < nameSplit.length - 1; i++) {
+				if(i == 0) {
+					firstName = nameSplit[i];
+				} else if(i > 0 && i < nameSplit.length - 2) {
+					firstName = firstName + " " + nameSplit[i];
+				} else {
+					firstName = firstName + " " + nameSplit[i];
+					lastName = lastName + nameSplit[i + 1];
+				}
+			}
+		} else {
+			for(int i = 0; i < nameSplit.length - 1; i++) {
+				if(i == 0) {
+					firstName = nameSplit[i];
+					lastName = nameSplit[i + 1];
+				}
+			}
+		}
+
+		// Declare object variables and define them with pastedSplit info
+		int addZip = Integer.parseInt(pastedSplit[4]);
+		long addPhoneNo = Long.parseLong(pastedSplit[5]);
+		String addCity = pastedSplit[2];
+		String addFirstName = firstName;
+		String addLastName = lastName;
+		String addState = pastedSplit[3];
+		String addStreet = pastedSplit[1];
+		
+		// Populate the variables into objects
+		Address a1 = new Address(addStreet,addCity,addState,addZip);
+		Person ap1 = new Person(addFirstName,addLastName,addPhoneNo,a1);
+		// insert newly created Person into phonebook
+		phonebook = insertObject(phonebook,ap1);
+		displayAllRecords(phonebook);
 		return phonebook;
 	}
 	// Insert Person object into phonebook
@@ -293,13 +359,16 @@ public class Applications {
 	// delete methods (checkDelete & deleteEntry)
 	private static Person[] checkDelete(Person[] phonebook) {
 		// Declare and define variables
-		Scanner userInput = new Scanner(System.in);
 		boolean deleteRecord = false;
 		int choice = 0;
 		long deleteNumber = 0L;
 		Person[] reference = new Person[0];
 		String flagName = "";
 		String trash = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
 		// Get userInput for deletion
 		reference = search(phonebook); //personByPhone(phonebook,searchNo);
 		if(reference.length > 1) {
@@ -349,13 +418,16 @@ public class Applications {
 	// update methods (checkUpdate & updateEntry)
 	private static Person[] checkUpdate(Person[] phonebook) {
 		// Declare and define variables
-		Scanner userInput = new Scanner(System.in);
 		boolean updateRecord = false;
 		int choice = 0;
 		long updateNumber = 0L;
 		Person[] reference = new Person[0];
 		String flagName = "";
 		String trash = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
 		// Get userInput for deletion
 		reference = search(phonebook); //personByPhone(phonebook,searchNo);
 		if(reference.length > 1) {
@@ -383,13 +455,16 @@ public class Applications {
 	}
 	private static Person[] updateEntry(Person[] phonebook, long updateNumber, boolean updateRecord) {
 		// Declare and define variables
-		Scanner userInput = new Scanner(System.in);
 		int choice = 0;
 		int newZip = 0;
 		long newPhone = 0L;
 		String flagName = "";
 		String newEntry = "";
 		String trash = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
 		do {	
 			System.out.println("Which section of the record do you wish to UPDATE?");
 			System.out.println("1) Last Name  2) First Name  3) Street Address"
@@ -473,77 +548,116 @@ public class Applications {
 	
 	// searchEntry method (requires search term)	
 	private static Person[] search(Person[] phonebook) {
-		Scanner userInput = new Scanner(System.in);
+		// Declare and define variables
 		int choice = 0;
-		Person[] reference = new Person[0];
 		long searchPhone = 0L;
+		Person[] reference = new Person[0];
+		String firstName = "";
+		String lastName = "";
 		String searchCity = "";
 		String searchFName = "";
 		String searchLName = "";
+		String searchTName = "";
 		String searchState = "";
 		String trash = "";
+		/* Open Scanner input; don't close as this causes problems with error 
+		 * correction
+		 */
+		Scanner userInput = new Scanner(System.in);
 		System.out.println("How would you like to search? \n1) Phone Number\n2) "
 				+ "First Name\n3) Last Name\n4) City or State\n5) Full Name");
 		choice = userInput.nextInt();
 		trash = userInput.nextLine();
 		switch (choice){
 			case 1:
+				// Search using the telephone number
 				System.out.println("Please enter the telephone number to search "
 						+ "for (digits only): ");
 				searchPhone = userInput.nextLong();
 				trash = userInput.nextLine();
 				Search searchResult = new SearchPhoneNo(phonebook,searchPhone);
 				reference = searchResult.searchEntry(phonebook);
-				displaySearchRecord(reference);
+				displaySearchRecord(reference);  // Display the results
 				break;
 			case 2:
+				// Search using the first name
 				System.out.println("Please enter the first name to search for: ");
 				searchFName = userInput.nextLine();
 				searchResult = new SearchFirstName(phonebook,searchFName);
 				reference = searchResult.searchEntry(phonebook);
-				displaySearchRecord(reference);
+				displaySearchRecord(reference);  // Display the results
 				break;
 			case 3:
+				// Search using the last name
 				System.out.println("Please enter the last name to search for: ");
 				searchLName = userInput.nextLine();
 				searchResult = new SearchLastName(phonebook,searchLName);
 				reference = searchResult.searchEntry(phonebook);
-				displaySearchRecord(reference);
+				displaySearchRecord(reference);  // Display the results
 				break;
 			case 4:
-				choice = 0;
+				// Search using the city or state
+				choice = 0;  // Zero out choice to use for the next switch statement
 				System.out.println("Do you want to search using city or state? "
 						+ "\n1) City\n2) State");
 				choice = userInput.nextInt();
 				trash = userInput.nextLine();
 				switch (choice) {
 				case 1:
-					// reference = searchCity(phonebook, searchCity);
+					// Search using the city's name
 					System.out.println("Please enter the name of the city you are"
 							+ " searching for: ");
 					searchCity = userInput.nextLine();
 					searchResult = new SearchCityState(phonebook,searchCity);
 					reference = searchResult.searchEntry(phonebook);
-					displaySearchRecord(reference);
+					displaySearchRecord(reference);  // Display the results
 					break;
 				case 2:
-					// reference = searchState(phonebook, searchState);
+					// Seach using the state abbreviation
 					System.out.println("Please enter the name of the city you are"
 							+ " searching for: ");
 					searchState = userInput.nextLine();
 					searchResult = new SearchCityState(phonebook,searchState);
 					reference = searchResult.searchEntry(phonebook);
-					displaySearchRecord(reference);
+					displaySearchRecord(reference);  // Display the results
 					break;
 				}
 				break;
 			case 5:
+				// Search using the person's full name
+				System.out.println("Please enter the full name to search for: ");
+				searchTName = userInput.nextLine();
+				String[] nameSplit = searchTName.split(" ");
+				// Split the name into first and last name
+				if(nameSplit.length > 2) { // For any name more than 2 names
+					for(int i = 0; i < nameSplit.length - 1; i++) {
+						if(i == 0) {
+							firstName = nameSplit[i];
+						} else if(i > 0 && i < nameSplit.length - 2) {
+							firstName = firstName + " " + nameSplit[i];
+						} else {
+							firstName = firstName + " " + nameSplit[i];
+							lastName = lastName + nameSplit[i + 1];
+						}
+					}
+				} else {
+					// For all names greater than 2, places middle names as first names
+					for(int i = 0; i < nameSplit.length - 1; i++) {
+						if(i == 0) {
+							firstName = nameSplit[i];
+							lastName = nameSplit[i + 1];
+						}
+					}
+				}
+				searchResult = new SearchFullName(phonebook,firstName,lastName);
+				reference = searchResult.searchEntry(phonebook);
+				displaySearchRecord(reference);  // Display the results
 				break;
 		}
 		return reference;
 	}
-	// showAscending method
 	
+	// showAscending method
 	private static void showAscending() {
 		/* Compare one entry of an array to the next
 		 * If the entry is higher than the current entry, move up one rung

@@ -1,15 +1,16 @@
 package phonebookProject;
 
 public class Address {
+	// Class specific variables
 	private String street;
 	private String city;
 	private String state;
 	private int zip;
-	
+	// Basic constructor
 	public Address () {
 		
 	}
-
+	// Specific constructor
 	public Address(String street, String city, String state, int zip) {
 		super();
 		this.street = street;
@@ -17,13 +18,13 @@ public class Address {
 		this.state = state;
 		this.zip = zip;
 	}
-	
+	// toString override
 	@Override
 	public String toString() {
 		String returnOutput = street + ", " + city + ", " + state + "  " + zip;
 		return returnOutput;
 	}
-
+	// Getters and setters
 	public String getStreet() {
 		return street;
 	}

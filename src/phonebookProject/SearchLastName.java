@@ -1,7 +1,9 @@
 package phonebookProject;
 
 public class SearchLastName extends Search {
+	// Class specific variable
 	private String searchLName = "";
+	// SearchLastName constructor
 	public SearchLastName(Person[] phonebook,String lName) {
 		// TODO Auto-generated constructor stub
 		searchLName = lName;
@@ -11,7 +13,7 @@ public class SearchLastName extends Search {
 		searchLastName(phonebook,searchLName);
 		return reference;
 	}
-
+	// Class specific method
 	private Person[] searchLastName(Person[] phonebook, String searchLName) {
 		// make a for loop to measure out the size of the phonebook array
 		int count = 0;

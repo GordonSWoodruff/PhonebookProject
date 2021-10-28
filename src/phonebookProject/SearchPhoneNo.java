@@ -1,7 +1,9 @@
 package phonebookProject;
 
 public class SearchPhoneNo extends Search {
+	// Class specific variable
 	private long searchPhone = 0L;
+	// SearchPhoneNo constructor
 	public SearchPhoneNo(Person[] phonebook,long phoneNo) {
 		// TODO Auto-generated constructor stub
 		searchPhone = phoneNo;
@@ -12,6 +14,7 @@ public class SearchPhoneNo extends Search {
 		reference = searchPhoneNo(phonebook,searchPhone);
 		return reference;
 	}
+	// Class specific method
 	private Person[] searchPhoneNo(Person[] phonebook, long searchPhone) {
 		// make a for loop to measure out the size of the phonebook array
 		int count = 0;

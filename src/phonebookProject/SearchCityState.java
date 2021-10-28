@@ -1,8 +1,11 @@
 package phonebookProject;
 
 public class SearchCityState extends Search {
+	// Class specific variables
 	private String searchCity = "";
 	private String searchState = "";
+	
+	// SearchCityState Constructor
 	public SearchCityState (Person[] phonebook,String location) {
 		// TODO Auto-generated constructor stub
 		if(location.length() > 2) {
@@ -25,7 +28,7 @@ public class SearchCityState extends Search {
 		}
 		return reference;
 	}
-
+	// Class specific method
 	private Person[] searchCity(Person[] phonebook, String searchCity) {
 		// make a for loop to measure out the size of the phonebook array
 		int count = 0;
@@ -49,7 +52,6 @@ public class SearchCityState extends Search {
 		 }
 		return reference; // phonebook[reference];
 	}
-
 	private Person[] searchState(Person[] phonebook, String searchState) {
 		// make a for loop to measure out the size of the phonebook array
 		int count = 0;
