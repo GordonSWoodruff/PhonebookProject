@@ -124,7 +124,6 @@ public class Applications {
 			break;
 		case 4:
 			while(redoSection) {
-				System.out.println("Main Menu Phonebook size = " + phonebook.length);
 				phonebook = checkUpdate(phonebook);
 				System.out.println("Do you want to UPDATE another record? (Y/N) ");
 				redo = userInput.nextLine();
@@ -136,7 +135,6 @@ public class Applications {
 			break;
 		case 5:
 			while(redoSection) {
-				System.out.println("Main Menu Phonebook size = " + phonebook.length);
 				search(phonebook);
 				System.out.println("Do you want to SEARCH FOR another record? (Y/N) ");
 				redo = userInput.nextLine();
@@ -147,7 +145,7 @@ public class Applications {
 			}
 			break;
 		case 6:
-			showAscending();
+			phonebook = showAscending(phonebook);
 			break;
 		case 7:
 			System.out.println("Do you want to quit? (Y/N)");
@@ -180,7 +178,6 @@ public class Applications {
 		}
 	}
 	
-	
 	// addEntry method
 	private static Person[] addEntry(Person[] phonebook) {
 		// Declare and define variables
@@ -203,7 +200,6 @@ public class Applications {
 	}
 
 	// addEntryManual methods
-//	private static Person[] addEntry(Person[] phonebook) {
 	private static Person[] addEntryManual(Person[] phonebook) {
 		// Declare and define needed variables
 		boolean validInput = false;
@@ -658,15 +654,47 @@ public class Applications {
 	}
 	
 	// showAscending method
-	private static void showAscending() {
-		/* Compare one entry of an array to the next
-		 * If the entry is higher than the current entry, move up one rung
-		 * If the entry is lower than the current entry, move down one rung
-		 * If the entry is higher than the previous and lower than the next, 
-		 * place it there, grab the one in the spot, and start to compare that one
-		 */
-		
+	private static Person[] showAscending(Person[] phonebook) {
+		// Declare and define variables
+		char checker = '*'; // letter to check against
+		char tester = '*'; // tested letter from the phonebook
+		int index = 97; // character index
+		Person[] result = new Person[0];  // return array
+		for(index = 97; index < 123; index++) { // cycle through the characters from 'a' to 'z'
+			checker = (char) index;
+			for(int i = 0; i < phonebook.length; i++) {
+				// Grab the 1st letter of the last name and test it against the checker
+				tester = phonebook[i].getLastName().toLowerCase().charAt(0);
+				if(checker == tester) { // if both values match...
+					// ...insert the entry into the result array
+					result = insertObject(result,phonebook[i]);
+				}
+			}
+		}
+		displaySearchRecord(result); // display the results of the SORT
+		phonebook = result; // replace the old phonebook with the SORTed one
+
+		return phonebook;
 	}
+	
+//	private static Person[] showAscending(Person[] phonebook) {
+//		String checker = "";
+//		String tester = "";
+//		int index = 0;
+//		checker = "Do";
+//		checker = checker.toLowerCase();
+//		tester = phonebook[0].getLastName().substring(0,2);
+//		tester = tester.toLowerCase();
+//		if (checker.equals(tester)) {
+//			System.out.println("works!");
+//		} else {
+//			System.out.println(checker);
+//			System.out.println(tester);
+//			System.out.println("Nope!");
+//		}
+//		
+//		return phonebook;
+//	}
 	
 	// Converts String to Boolean
 	private static boolean toBoolean(String flagName) {
